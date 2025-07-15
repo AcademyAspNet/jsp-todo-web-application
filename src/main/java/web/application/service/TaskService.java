@@ -1,5 +1,6 @@
 package web.application.service;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,13 +31,17 @@ public class TaskService {
 					int taskId = resultSet.getInt("Id");
 					String taskTitle = resultSet.getString("Title");
 					String taskDescription = resultSet.getString("Description");
+					boolean taskIsDone = resultSet.getBoolean("IsDone");
 					Timestamp taskCreatedAt = resultSet.getTimestamp("CreatedAt");
+					Timestamp taskUpdatedAt = resultSet.getTimestamp("UpdatedAt");
 					
 					Task task = new Task();
 					task.setId(taskId);
 					task.setTitle(taskTitle);
 					task.setDescription(taskDescription);
+					task.setDone(taskIsDone);
 					task.setCreatedAt(taskCreatedAt);
+					task.setUpdatedAt(taskUpdatedAt);
 					
 					tasks.add(task);
 				}
@@ -46,5 +51,21 @@ public class TaskService {
 		});
 		
 		return tasks;
+	}
+	
+	public void createTask(String title, String description) {
+		database.useConnection(connection -> {
+			try {
+				String sql = "INSERT INTO Tasks (Title, Description) VALUES (?, ?)";
+				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+				
+				preparedStatement.setString(1, title);
+				preparedStatement.setString(2, description);
+				
+				preparedStatement.executeUpdate();
+			} catch (SQLException exception) {
+				throw new RuntimeException(exception);
+			}
+		});
 	}
 }

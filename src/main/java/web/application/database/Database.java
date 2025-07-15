@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+import jakarta.servlet.ServletContext;
+
 public abstract class Database {
 
 	protected final String ip;
@@ -19,6 +21,18 @@ public abstract class Database {
 		
 		this.credentials = credentials;
 		this.databaseName = databaseName;
+	}
+	
+	public Database(ServletContext servletContext) {
+		this.ip = servletContext.getInitParameter("database.ip");
+		this.port = Integer.parseInt(servletContext.getInitParameter("database.port"));
+		
+		this.databaseName = servletContext.getInitParameter("database.name");
+		
+		String user = servletContext.getInitParameter("database.user");
+		String password = servletContext.getInitParameter("database.password");
+		
+		this.credentials = new Credentials(user, password);
 	}
 	
 	protected abstract String getConnectionString();

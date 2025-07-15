@@ -1,5 +1,7 @@
 package web.application.database;
 
+import jakarta.servlet.ServletContext;
+
 public class SqlServer extends Database {
 
 	private static final int DEFAULT_PORT = 1433;
@@ -10,6 +12,10 @@ public class SqlServer extends Database {
 	
 	public SqlServer(String ip, Credentials credentials, String databaseName) {
 		super(ip, DEFAULT_PORT, credentials, databaseName);
+	}
+	
+	public SqlServer(ServletContext servletContext) {
+		super(servletContext);
 	}
 	
 	protected String getConnectionString() {
