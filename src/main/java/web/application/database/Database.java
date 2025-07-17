@@ -38,7 +38,7 @@ public abstract class Database {
 	protected abstract String getConnectionString();
 	protected abstract String getDriver();
 	
-	public void useConnection(Consumer<Connection> consumer) {
+	public Connection createConnection() throws SQLException {
 		try {
 			Class.forName(getDriver());
 		} catch (ClassNotFoundException exception) {
@@ -49,7 +49,11 @@ public abstract class Database {
 		String user = credentials.getUser();
 		String password = credentials.getPassword();
 		
-		try (Connection connection = DriverManager.getConnection(connectionString, user, password)) {
+		return DriverManager.getConnection(connectionString, user, password);
+	}
+	
+	public void useConnection(Consumer<Connection> consumer) {
+		try (Connection connection = createConnection()) {
 			consumer.accept(connection);
 		} catch (SQLException exception) {
 			throw new RuntimeException(exception);

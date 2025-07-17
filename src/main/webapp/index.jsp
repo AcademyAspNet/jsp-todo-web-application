@@ -43,10 +43,31 @@
 								<span class="text-secondary fst-italic">Описание задачи отсутствует...</span>
 							<% } %>
 						</div>
-						<div class="card-footer">
-							<div class="created-at">
+						<div class="card-footer d-flex align-items-center">
+							<div class="created-at w-50">
 								<i class="bi bi-clock"></i>
 								<span><%= FormatHelper.formatDateTime(task.getCreatedAt()) %></span>
+							</div>
+							<div class="container-fluid p-0 d-flex flex-row-reverse">
+								<a class="btn btn-danger ms-2" href="Tasks/Delete?id=<%= task.getId() %>">
+									<i class="bi bi-trash3 me-1"></i>
+									Удалить
+								</a>
+								<a class="btn btn-primary ms-2" href="editTask.jsp?id=<%= task.getId() %>">
+									<i class="bi bi-pencil me-1"></i>
+									Редактировать
+								</a>
+								<% if (task.isDone()) { %>
+									<a class="btn btn-danger" href="Tasks/ChangeStatus?id=<%= task.getId() %>">
+										<i class="bi bi-x-lg me-1"></i>
+										Снять метку
+									</a>
+								<% } else { %>
+									<a class="btn btn-success" href="Tasks/ChangeStatus?id=<%= task.getId() %>">
+										<i class="bi bi-check2 me-1"></i>
+										Отметить
+									</a>
+								<% } %>
 							</div>
 						</div>
 					</div>
